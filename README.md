@@ -4,9 +4,28 @@
 
 ## `main.go`
 
+This file bootstrap the server, housing the request router and the main function
+
+At the moment `main()` contains some dummy data for testing purposes
+
 ## `api.go`
 
+`api.go` defines how the different API routes should behave as per this table:
+
+| Endpoint | method | function    | description |
+|----------|--------|-------------|-------------|
+| `/`      | GET    | `homePage`  | This is temporary and just lets a client know the server is up and operational without returning any data|
+| `/foods` | GET    | `returnAll` | Returns data on all food in the database, as of right now the only data in the program is defined in main and is, again, temporary |
+| `/food`  | GET   | `createNewFood` | Adds a new food to the database |
+| `/food/{name}` | POST | `returnByName` | Gets a given foods data |
+| `/login` | POST | `login` | Brokers the user an API token to access certain api endpoints. The way in which all the user stuff is done needs to be fleshed out |
+
+
 ## `auth.go`
+
+Manages authorisation of users
+
+This API uses JWT or javascript web tokens to ensure only users of the correct access level can access certain functions of the API. The details of this can be viewed [here](#access-levels)
 
 ## `database.go`
 

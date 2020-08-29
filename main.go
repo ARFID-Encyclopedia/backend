@@ -6,11 +6,14 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/sdomino/scribble"
+
 	"github.com/gorilla/mux"
 )
 
 var foods []food
 var users map[uint64]user
+var db *scribble.Driver
 
 func handleRequests() {
 	r := mux.NewRouter().StrictSlash(true)
@@ -24,6 +27,7 @@ func handleRequests() {
 
 func main() {
 	os.Setenv("ACCESS_SECRET", "asdffgsdfgh")
+	db = initDB()
 	users = make(map[uint64]user)
 	log.Println("arfid encyclopedia server started on port 8080")
 	users[1] = user{
