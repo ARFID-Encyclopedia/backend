@@ -47,14 +47,27 @@ func createNewFood(w http.ResponseWriter, r *http.Request) {
 	log.Printf("token string: %v", token)
 	userid, err := verifyToken(token)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		fmt.Fprintf(w, `{"Error": "Error verifying token"}`)
+		return
 	}
-	if users[userid].AccessLevel >= MOD {
+	var user user
+	if err := db.Read("users", userid, &user); err != nil {
+		log.Println("Error user not found", err)
+		fmt.Fprintf(w, `{"Error": "User not found"}`)
+		return
+	}
+	if user.AccessLevel >= MOD {
 		reqBody, _ := ioutil.ReadAll(r.Body)
 		var food food
 		json.Unmarshal(reqBody, &food)
 		log.Println("endpoint hit: create food " + food.Name)
 		foods = append(foods, food)
+		if err := writeFoodToDB(food); err != nil {
+			fmt.Fprintf(w, `{"Error": "writing food to db"}`)
+			log.Println("Error writing food to db: ", err)
+			return
+		}
 		json.NewEncoder(w).Encode(food)
 	} else {
 		fmt.Fprintf(w, `{"Error": "Not authorised for this endpoint"}`)

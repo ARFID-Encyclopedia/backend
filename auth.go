@@ -17,14 +17,14 @@ import (
 type slice []string
 
 type user struct {
-	ID           uint64 `json:"id"`
+	ID           string `json:"id"`
 	Username     string `json:"username"`
 	PasswordHash string `json:"passHash"`
 	AccessLevel  int    `json:"accessLevel"`
 }
 
 type customClaims struct {
-	ID uint64 `json:"id"`
+	ID string `json:"id"`
 	jwt.StandardClaims
 }
 
@@ -37,7 +37,7 @@ const (
 
 var passHashBytes [20]byte = sha1.Sum([]byte("adminpassword"))
 
-func createToken(userid uint64) (string, error) {
+func createToken(userid string) (string, error) {
 	var err error
 	atClaims := customClaims{
 		ID: userid,
@@ -54,7 +54,7 @@ func createToken(userid uint64) (string, error) {
 	return token, nil
 }
 
-func verifyToken(tokenString string) (uint64, error) {
+func verifyToken(tokenString string) (string, error) {
 	token, err := jwt.ParseWithClaims(
 		tokenString,
 		&customClaims{},
@@ -67,10 +67,10 @@ func verifyToken(tokenString string) (uint64, error) {
 	}
 	claims, ok := token.Claims.(*customClaims)
 	if !ok {
-		return 0, errors.New("Couldn't parse claims")
+		return "", errors.New("Couldn't parse claims")
 	}
 	if claims.ExpiresAt < time.Now().UTC().Unix() {
-		return 0, errors.New("JWT is expired")
+		return "", errors.New("JWT is expired")
 	}
 	return claims.ID, nil
 
@@ -78,13 +78,21 @@ func verifyToken(tokenString string) (uint64, error) {
 
 func login(w http.ResponseWriter, r *http.Request) {
 	reqBody, _ := ioutil.ReadAll(r.Body)
-	var user user
-	json.Unmarshal(reqBody, &user)
-	if user.Username != users[1].Username || user.PasswordHash != users[1].PasswordHash {
+	var attemptedCredentials user
+	json.Unmarshal(reqBody, &attemptedCredentials)
+	log.Printf("attempted Credentials: %v", attemptedCredentials.Username)
+	var dbuser user
+	log.Printf("looking up user: %v", userMap[attemptedCredentials.Username])
+	if err := db.Read("users", userMap[attemptedCredentials.Username], &dbuser); err != nil {
+		log.Println("Error user not found", err)
+		fmt.Fprintf(w, `{"Error": "User not found, Incorrect username?"}`)
+		return
+	}
+	if attemptedCredentials.Username != dbuser.Username || attemptedCredentials.PasswordHash != dbuser.PasswordHash {
 		fmt.Fprintf(w, `{"Error": "Incorrect username or password"}`)
 		return
 	}
-	token, err := createToken(users[1].ID)
+	token, err := createToken(dbuser.ID)
 	if err != nil {
 		fmt.Fprintf(w, `{"Error": "Error generating token %v"}`, err.Error())
 		return
