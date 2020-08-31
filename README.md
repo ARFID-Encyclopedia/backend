@@ -31,6 +31,8 @@ This API uses JWT or javascript web tokens to ensure only users of the correct a
 
 The database will use scribble mainly as it is very light
 
+If the database is unable to write the new user, the client will be returned a http 500 error code.
+
 There will be 2 collections:
 * Users
 * Foods
