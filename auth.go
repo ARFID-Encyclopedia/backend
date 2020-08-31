@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+	uuid "github.com/satori/go.uuid"
 )
 
 type slice []string
@@ -98,4 +99,21 @@ func login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	fmt.Fprint(w, token)
+}
+
+func register(w http.ResponseWriter, r *http.Request) {
+	reqBody, _ := ioutil.ReadAll(r.Body)
+	var newUserCredentials user
+	json.Unmarshal(reqBody, &newUserCredentials)
+	log.Printf("new user credentials: %v %v", newUserCredentials.Username, newUserCredentials.PasswordHash)
+	newUserCredentials.ID = uuid.Must(uuid.NewV4()).String()
+	newUserCredentials.AccessLevel = USER
+	if err := db.Write("users", newUserCredentials.ID, newUserCredentials); err != nil {
+		log.Printf("Unable to write user: %v to the db", newUserCredentials.Username)
+		returnHTTPError(w, http.StatusInternalServerError, "500 - error processing new user")
+		return
+	}
+	log.Printf("Added user %v to the database", newUserCredentials.Username)
+	returnHTTPError(w, http.StatusOK, "User "+newUserCredentials.Username+" registered")
+	genUserMap()
 }
