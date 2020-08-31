@@ -23,7 +23,7 @@ At the moment `main()` contains some dummy data for testing purposes
 
 ## `auth.go`
 
-Manages authorisation of users
+Manages authorization of users
 
 This API uses JWT or javascript web tokens to ensure only users of the correct access level can access certain functions of the API. The details of this can be viewed [here](#access-levels)
 
@@ -37,7 +37,7 @@ There will be 2 collections:
 
 ### Users
 
-> For testing purposes an admin account is avaliable under: admin, adminpassword
+> For testing purposes an admin account is available under: admin, adminpassword
 
 A user will look like this:
 ```go
