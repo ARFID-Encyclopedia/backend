@@ -20,6 +20,7 @@ At the moment `main()` contains some dummy data for testing purposes
 | `/foods` | GET    | `returnAll` | Returns data on all food in the database, as of right now the only data in the program is defined in main and is, again, temporary |
 | `/food`  | GET   | `createNewFood` | Adds a new food to the database |
 | `/food/{name}` | POST | `returnByName` | Gets a given foods data |
+| `/food/edit/` | POST | `editFood` | Post a food object to update the food in the db |
 | `/login` | POST | `login` | Brokers the user an API token to access certain api endpoints. The way in which all the user stuff is done needs to be fleshed out |
 
 
