@@ -30,11 +30,6 @@ func main() {
 	db = initDB()
 	genUserMap()
 	log.Println("arfid encyclopedia server started on port 8080")
-	log.Print(getAllUsers())
-	//log.Printf("admin user login: %v %v", users[1].Username, users[1].PasswordHash)
-	foods = []food{
-		food{Name: "Vegimite", Category: "Condiments", Visual: "description", Texture: "description", Smell: "description", Taste: "description", Nutrients: []string{"smth"}},
-		food{Name: "Mozzarella", Category: "Dairy", Visual: "White, soft but solid (it will deform a bit when you poke it, but you can’t spread it)", Texture: "feels wet, slightly chewy, slightly stringy", Smell: "Very weak/non existent smell", Taste: "Weak, slightly milky flavour, some brands can have an unpleasant bitter/acidic aftertaste, though this might go away when cooked", Nutrients: []string{"fats"}},
-	}
+	foods = getAllFood()
 	handleRequests()
 }

@@ -31,15 +31,7 @@ This API uses JWT or javascript web tokens to ensure only users of the correct a
 
 ### Registering Users
 
-<<<<<<< Updated upstream
-If the database is unable to write the new user, the client will be returned a http 500 error code.
-
-There will be 2 collections:
-* Users
-* Foods
-=======
 Users are registered through a post request sent to `/register` following the structure of the user struct. The request is then unmarshaled and added to the database. The user can then log in normally.
->>>>>>> Stashed changes
 
 ### Users
 

@@ -95,7 +95,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 	}
 	token, err := createToken(dbuser.ID)
 	if err != nil {
-		fmt.Fprintf(w, `{"Error": "Error generating token %v"}`, err.Error())
+		returnHTTP(w, http.StatusInternalServerError, `{"Error": "Error generating token"}`)
 		return
 	}
 	fmt.Fprint(w, token)
@@ -110,10 +110,10 @@ func register(w http.ResponseWriter, r *http.Request) {
 	newUserCredentials.AccessLevel = USER
 	if err := db.Write("users", newUserCredentials.ID, newUserCredentials); err != nil {
 		log.Printf("Unable to write user: %v to the db", newUserCredentials.Username)
-		returnHTTPError(w, http.StatusInternalServerError, "500 - error processing new user")
+		returnHTTP(w, http.StatusInternalServerError, "500 - error processing new user")
 		return
 	}
 	log.Printf("Added user %v to the database", newUserCredentials.Username)
-	returnHTTPError(w, http.StatusOK, "User "+newUserCredentials.Username+" registered")
+	returnHTTP(w, http.StatusOK, `{"Ok": "User `+newUserCredentials.Username+` registered"}`)
 	genUserMap()
 }
