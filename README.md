@@ -58,6 +58,8 @@ An access level dictates what a user can and cannot do
 
 #### Access Levels
 
+Access levels dictate which users are able to access what resources as described below:
+
 | Access level | Alias | Description |
 |--------------|-------|-------------|
 | 0            | ANON  | The user hasn't logged in and has no rights to add edit or remove content |
