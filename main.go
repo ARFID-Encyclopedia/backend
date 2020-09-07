@@ -19,6 +19,7 @@ func handleRequests() {
 	r.HandleFunc("/", homePage)
 	r.HandleFunc("/foods", returnAll)
 	r.HandleFunc("/food", createNewFood).Methods("POST")
+	r.HandleFunc("/food/edit", editFood).Methods("POST")
 	r.HandleFunc("/food/{name}", returnByName)
 	r.HandleFunc("/login", login).Methods("POST")
 	r.HandleFunc("/register", register).Methods("POST")

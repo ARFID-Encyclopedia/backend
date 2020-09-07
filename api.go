@@ -71,7 +71,8 @@ func createNewFood(w http.ResponseWriter, r *http.Request) {
 }
 
 func editFood(w http.ResponseWriter, r *http.Request) {
-	token := strings.TrimPrefix(r.Header.Get("Authorisation"), "Bearer ")
+	token := strings.TrimPrefix(r.Header.Get("Authorization"), "Bearer ")
+	log.Println(token)
 	userid, err := verifyToken(token)
 	checkErr(err)
 	var user user
@@ -99,9 +100,14 @@ func editFood(w http.ResponseWriter, r *http.Request) {
 			Nutrients: reqFood.Nutrients,
 			Author:    reqFood.Author,
 		}
-		db.Write("foods", finalFood.Name, finalFood)
-		returnHTTP(w, 200, "Edit successfull")
+		if err := db.Write("foods", finalFood.Name, finalFood); err != nil {
+			returnHTTP(w, 500, "Food not found in db")
+			return
+		}
+		returnHTTP(w, 200, "Edit successful")
+		return
 	} else {
 		returnHTTP(w, 500, "User is not authorised to access this endpoints")
+		return
 	}
 }
