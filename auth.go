@@ -102,6 +102,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 }
 
 func register(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	reqBody, _ := ioutil.ReadAll(r.Body)
 	var newUserCredentials user
 	json.Unmarshal(reqBody, &newUserCredentials)

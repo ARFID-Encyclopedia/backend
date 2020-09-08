@@ -23,7 +23,7 @@ func handleRequests() {
 	r.HandleFunc("/food/{name}", returnByName)
 	r.HandleFunc("/login", login).Methods("POST")
 	r.HandleFunc("/register", register).Methods("POST")
-	log.Fatal(http.ListenAndServe(":8080", r))
+	log.Fatal(http.ListenAndServe(":6969", r))
 }
 
 func main() {

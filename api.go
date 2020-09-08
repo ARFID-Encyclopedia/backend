@@ -22,16 +22,19 @@ type food struct {
 }
 
 func homePage(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	returnHTTP(w, 200, "Home endpoint")
 	log.Println("endpoint hit: root")
 }
 
 func returnAll(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	log.Println("endpoint hit: returnAll")
 	json.NewEncoder(w).Encode(foods)
 }
 
 func returnByName(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	vars := mux.Vars(r)
 	name := vars["name"]
 	log.Println("endpoint hit: food " + name)
@@ -43,6 +46,7 @@ func returnByName(w http.ResponseWriter, r *http.Request) {
 }
 
 func createNewFood(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	token := strings.TrimPrefix(r.Header.Get("Authorization"), "Bearer ")
 	userid, err := verifyToken(token)
 	checkErr(err)
@@ -71,6 +75,7 @@ func createNewFood(w http.ResponseWriter, r *http.Request) {
 }
 
 func editFood(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	token := strings.TrimPrefix(r.Header.Get("Authorization"), "Bearer ")
 	log.Println(token)
 	userid, err := verifyToken(token)
